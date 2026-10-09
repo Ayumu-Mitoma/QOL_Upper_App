@@ -15,8 +15,7 @@ jobs:
       with:
         dotnet-version: '8.0.x' # 使用している.NETのバージョンに合わせてね
 
-　　- name: Publish Blazor WebAssembly
-      # フォルダが重なっている場合でもプロジェクトファイルを直接指定してビルドする
+    - name: Publish Blazor WebAssembly
       run: dotnet publish QOL_Upper_App.csproj -c Release -o release
 
     # GitHub Pages用のパス調整 (404対策)
