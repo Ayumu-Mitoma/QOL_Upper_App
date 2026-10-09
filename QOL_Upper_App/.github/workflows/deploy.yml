@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x' # 使用している.NETのバージョンに合わせてね
+
+    - name: Publish Blazor WebAssembly
+      run: dotnet publish -c Release -o release
+
+    # GitHub Pages用のパス調整 (404対策)
+    - name: Copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+    # .nojekyll ファイルの配置（GitHub Pagesが_framework等のフォルダを無視しないようにする）
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: release/wwwroot
+        branch: gh-pages
